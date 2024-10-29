@@ -42,11 +42,62 @@ function findTotal(dataset) {
 
 function calculateMean(dataset) {
  
+  if (!Array.isArray(dataset) || dataset.length === 0) {
+      return 0;
+  }
+
+  let total = 0;
+  let count = 0;
+
+  const is2DArray = dataset.every(Array.isArray);
+
+  if (is2DArray) {
+    for (const row of dataset) {
+      for (const value of row) {
+        if (typeof value === 'number' && isFinite(value)) {
+          total += value;
+            count++;
+            } else if (typeof value === 'string' && !isNaN(value)) {
+                const numValue = parseFloat(value);
+                  if (isFinite(numValue)) {
+                    total += numValue;
+                    count++;
+                  }
+              }
+          }
+      }
+  } else {
+      for (const value of dataset) {
+        if (typeof value === 'number' && isFinite(value)) {
+          total += value;
+            count++;
+          } else if (typeof value === 'string' && !isNaN(value)) {
+              const numValue = parseFloat(value);
+              if (isFinite(numValue)) {
+                total += numValue;
+                count++;
+              }
+          }
+      }
+  }
+
+  return count > 0 ? total / count : 0;
 };
 
 
 function calculateMedian(dataset) {
- 
+ const validNumbers = dataset
+  .map(Number)
+  .filter(num => typeof num === 'number' && !isNaN(num)); 
+
+  if (validNumbers.length === 0) {
+    return 0;
+  }
+  validNumbers.sort((a, b) => a - b);
+
+  const midIndex = Math.floor(validNumbers.length / 2);
+
+  return validNumbers.length % 2 === 0 ? (validNumbers[midIndex - 1] + validNumbers[midIndex]) / 2 : validNumbers[midIndex];
 
 }
 
