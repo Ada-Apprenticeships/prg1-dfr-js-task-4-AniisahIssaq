@@ -125,7 +125,28 @@ function flatten(dataframe) {
 }
 
 function loadCSV(csvFile, ignoreRows, ignoreCols) {
+  try {
+    const fileContent = fs.readFileSync(csvFile, 'utf-8');
+    const rows = fileContent.split('\n').filter(row => row.trim() !== '');
+    const totalRows = rows.length;
+    const totalColumns = rows.length > 0 ? rows[0].split(',').length : 0;
 
+    const dataframe = rows
+      .map((row, rowIndex) => {
+        if (ignoreRows.includes(rowIndex)) {
+          return null;
+        }
+        const columns = row.split(',')
+        return columns.filter((_, colIndex) => !ignoreCols.includes(colIndex));
+      })
+    .filter(row => row !== null);
+
+  return [dataframe, totalRows, totalColumns];
+  } catch (error) {
+    console.error(`Error loading CSV: ${error.message}`);
+    return [[], -1, -1]; 
+  }
+  
 }
 
 
