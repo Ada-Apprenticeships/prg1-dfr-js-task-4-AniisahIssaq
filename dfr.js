@@ -118,7 +118,10 @@ function convertToNumber(dataframe, col) {
 }
 
 function flatten(dataframe) {
-  
+  if (!Array.isArray(dataframe) || dataframe.length === 0 || !Array.isArray(dataframe[0]) || dataframe[0].length !== 1) {
+    return [];
+  }
+  return dataframe.map(row => row[0]);
 }
 
 function loadCSV(csvFile, ignoreRows, ignoreCols) {
