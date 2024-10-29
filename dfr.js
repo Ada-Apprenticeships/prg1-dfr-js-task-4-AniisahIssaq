@@ -102,7 +102,19 @@ function calculateMedian(dataset) {
 }
 
 function convertToNumber(dataframe, col) {
-  
+  let count = 0;
+
+  for (let row of dataframe) {
+    if (row.length > col && typeof row[col] === 'string') {
+      const convertedValue = Number(row[col]);
+
+      if (!isNaN(convertedValue)) {
+        row[col] = convertedValue;
+        count++;
+      }
+    }
+  }
+  return count;
 }
 
 function flatten(dataframe) {
