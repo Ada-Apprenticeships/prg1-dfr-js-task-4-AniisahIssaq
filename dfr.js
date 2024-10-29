@@ -5,7 +5,7 @@ function fileExists(filename) {
 }
 
 function validNumber(value) {
-  
+  return typeof value === 'number' && isNaN(value);
 }
 
 function dataDimensions(dataframe) {
