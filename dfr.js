@@ -5,40 +5,55 @@ function fileExists(filename) {
 }
 
 function validNumber(value) {
-  return typeof value === 'number' && isNaN(value);
+  if (typeof value === 'number' && !isNaN(value)) {
+    return true;
+  }
+  if (typeof value === 'string') {
+    const trimmedValue = value.trim();
+    const parsedValue = parseFloat(trimmedValue);
+
+    return !isNaN(parsedValue) && parsedValue.toString() === trimmedValue;
+  }
+
+return false;
+
 }
 
 function dataDimensions(dataframe) {
   let rows = -1;
   let columns = -1;
-  if (dataframe == null) {
-    return [rows,columns];
+  
+  if (dataframe === undefined || dataframe === null || dataframe === "") {
+    return [-1, -1];
   }
-
   if (Array.isArray(dataframe)) {
     rows = dataframe.length;
-    if (rows > 0 && typeof dataframe[0] == 'object') {
-        cols = Object.keys(dataframe).length;
+    if (rows > 0 && Array.isArray(dataframe[0])) {
+      columns = dataframe[0].length;
+      } else if (rows > 0 && !Array.isArray(dataframe[0])) {
+        columns = -1
+      }
     }
-  } else if (typeof dataframe === 'object') {
-    rows = 1;
-    cols = Object.keys(dataframe).length;
+    return [rows, columns];
   }
-return [rows, cols];
-}
+
 
 function findTotal(dataset) {
   let totalSum = 0
 
-  for (const row of dataset) {
-    for (const value of row) {
-      if (typeof value === 'number' && isFinite(value)) {
-        totalSum += value;
+  if (!Array.isArray(dataset) || dataset.length === 0) {
+    return 0;
+  }
+  for (const element of dataset) {
+      if (typeof element === 'number' && isFinite(element)) {
+        totalSum += element;
+      } else if (typeof element === 'string' && !isNaN(element)) {
+        totalSum += parseFloat(element);
       }
     }
+    return totalSum;
   }
-  return totalSum;
-}
+
 
 function calculateMean(dataset) {
  
@@ -49,38 +64,18 @@ function calculateMean(dataset) {
   let total = 0;
   let count = 0;
 
-  const is2DArray = dataset.every(Array.isArray);
-
-  if (is2DArray) {
-    for (const row of dataset) {
-      for (const value of row) {
-        if (typeof value === 'number' && isFinite(value)) {
-          total += value;
-            count++;
-            } else if (typeof value === 'string' && !isNaN(value)) {
-                const numValue = parseFloat(value);
-                  if (isFinite(numValue)) {
-                    total += numValue;
-                    count++;
-                  }
-              }
-          }
-      }
-  } else {
-      for (const value of dataset) {
-        if (typeof value === 'number' && isFinite(value)) {
-          total += value;
-            count++;
-          } else if (typeof value === 'string' && !isNaN(value)) {
-              const numValue = parseFloat(value);
-              if (isFinite(numValue)) {
-                total += numValue;
-                count++;
-              }
-          }
-      }
+  for (const element of dataset) {
+    if (typeof element === 'number' && isFinite(element)) {
+      total += element;
+      count++;
+    } else if (typeof element === 'string' && !isNaN(element)) {
+      const numValue = parseFloat(element);
+        if (isFinite(numValue)) {
+          total += numValue;
+          count++
+        }
+    }
   }
-
   return count > 0 ? total / count : 0;
 };
 
@@ -151,11 +146,44 @@ function loadCSV(csvFile, ignoreRows, ignoreCols) {
 
 
 function createSlice(dataframe, columnIndex, pattern, exportColumns = []) {
+  if (!Array.isArray(dataframe) || !dataframe.length || !Array.isArray(dataframe[0])) {
+    return [];
+  }
+  if (typeof columnIndex !== 'number' || columnIndex < 0 || columnIndex >= dataframe[0].length) {
+    return [];
+  }
+  if (pattern === undefined) {
+    return [];
+  }
 
+  const result = [];
+  const hasWildCard = pattern === '*';
+
+  for (let i = 0; i < dataframe.length; i++) { 
+    const row = dataframe[i];
+    const valueToMatch = row[columnIndex];
+    if (hasWildCard || valueToMatch === pattern) {
+      const rowToAdd = exportColumns.length > 0
+        ? exportColumns
+            .filter(indexIsValid)
+            .map(index => {
+              if (index >= 0 && index < row.length) {
+                return row[index];
+              }
+              return undefined; 
+            })
+        : row; 
+
+      result.push(rowToAdd);
+    }
+  }
+
+  return result; 
 }
 
-
-
+function indexIsValid(index) {
+  return index >= 0;
+}
 
 
 module.exports = {
