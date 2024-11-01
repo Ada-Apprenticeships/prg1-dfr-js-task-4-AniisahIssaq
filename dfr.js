@@ -5,6 +5,7 @@ function fileExists(filename) {
   return fs.existsSync(filename);
 }
 
+
 // validates if a value is a number or a string that can be parsed into a number
 function validNumber(value) {
   if (typeof value === 'number' && !isNaN(value)) {
@@ -19,6 +20,7 @@ function validNumber(value) {
   }
   return false; // returns false if the value is not a valid number or parsable string
 }
+
 
 // determines the dimensions of a dataframe (array of arrays)
 function dataDimensions(dataframe) {
@@ -40,6 +42,7 @@ function dataDimensions(dataframe) {
   return [rows, columns]; // returns the dimensions of the dataframe
 }
 
+
 // calculates the total sum of numeric values in a dataset
 function findTotal(dataset) {
   let totalSum = 0;
@@ -58,6 +61,7 @@ function findTotal(dataset) {
   return totalSum; // returns the total sum
 }
 
+
 // calculates the mean (average) of numeric values in a dataset
 function calculateMean(dataset) {
   if (!Array.isArray(dataset) || dataset.length === 0) {
@@ -70,7 +74,7 @@ function calculateMean(dataset) {
   for (const element of dataset) {
     if (typeof element === 'number' && isFinite(element)) {
       total += element; // adds numeric elements to total
-      count++; // increments count of valid numbers
+      count++; // increments the count of valid numbers
     } else if (typeof element === 'string' && !isNaN(element)) {
       const numValue = parseFloat(element);
       if (isFinite(numValue)) {
@@ -81,6 +85,7 @@ function calculateMean(dataset) {
   }
   return count > 0 ? total / count : 0; // returns mean if count > 0, else return 0
 }
+
 
 // calculates the median of numeric values in a dataset
 function calculateMedian(dataset) {
@@ -99,6 +104,7 @@ function calculateMedian(dataset) {
   return validNumbers.length % 2 === 0 ? (validNumbers[midIndex - 1] + validNumbers[midIndex]) / 2 : validNumbers[midIndex];
 }
 
+
 // converts elements in a specified column of a dataframe to numbers
 function convertToNumber(dataframe, col) {
   let count = 0;
@@ -116,6 +122,7 @@ function convertToNumber(dataframe, col) {
   return count; // returns the count of conversions
 }
 
+
 // flattens a dataframe if it consists of single-column arrays
 function flatten(dataframe) {
   if (!Array.isArray(dataframe) || dataframe.length === 0 || !Array.isArray(dataframe[0]) || dataframe[0].length !== 1) {
@@ -123,6 +130,7 @@ function flatten(dataframe) {
   }
   return dataframe.map(row => row[0]); // returns flattened array
 }
+
 
 // loads and parses a CSV file, ignoring specified rows and columns
 function loadCSV(csvFile, ignoreRows, ignoreCols) {
@@ -148,6 +156,7 @@ function loadCSV(csvFile, ignoreRows, ignoreCols) {
     return [[], -1, -1]; // returns error message
   }
 }
+
 
 // creates a slice of the dataframe based on a pattern match
 function createSlice(dataframe, columnIndex, pattern, exportColumns = []) {
@@ -185,6 +194,7 @@ function createSlice(dataframe, columnIndex, pattern, exportColumns = []) {
 
   return result; // returns the sliced dataframe
 }
+
 
 // checks if an index is valid (non-negative)
 function indexIsValid(index) {
