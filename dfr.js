@@ -196,7 +196,7 @@ function createSlice(dataframe, columnIndex, pattern, exportColumns = []) {
 }
 
 
-// checks if an index is valid (non-negative)
+// checks if an index is valid (non-negative).
 function indexIsValid(index) {
   return index >= 0;
 }
