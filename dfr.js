@@ -201,7 +201,7 @@ function indexIsValid(index) {
   return index >= 0;
 }
 
-
+// leave code here for automated tests.
 module.exports = {
   fileExists,
   validNumber,
