@@ -47,7 +47,7 @@ function dataDimensions(dataframe) {
 function findTotal(dataset) {
   let totalSum = 0;
 
-  // returns 0 if the dataset is not an array or is empty
+  // returns 0 if the dataset is not an array or is empty.
   if (!Array.isArray(dataset) || dataset.length === 0) {
     return 0;
   }
